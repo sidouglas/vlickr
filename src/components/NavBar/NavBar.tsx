@@ -8,7 +8,7 @@ export const NavBar = ({ children }: { children?: ReactNode }) => {
         <Link to="/" className="text-xl font-bold">
           Vlickr
         </Link>
-        <img src="/src/assets/logo.svg" alt="" className="ml-2 h-5" />
+        <img src="/logo.svg" alt="" className="ml-2 h-5" />
       </div>
       {children}
     </nav>

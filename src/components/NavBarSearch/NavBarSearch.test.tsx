@@ -41,7 +41,7 @@ describe('NavBarSearch', () => {
             <img
               alt=""
               class="ml-2 h-5"
-              src="/src/assets/logo.svg"
+              src="/logo.svg"
             />
           </div>
           <SearchForm />
