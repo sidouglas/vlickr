@@ -1,4 +1,6 @@
-const PER_PAGE = 12;
+import { urlEncode } from './utils';
+
+export const PER_PAGE = 12;
 const API_BASE_URL = 'https://api.flickr.com/services/rest/';
 
 export const searchPhotosUrl = ({
@@ -10,7 +12,7 @@ export const searchPhotosUrl = ({
   page?: number;
   perPage?: number;
 }): string => {
-  const text = encodeURIComponent(term);
+  const text = urlEncode(term);
   const searchParams = new URLSearchParams({
     method: 'flickr.photos.search',
     api_key: import.meta.env.VITE_FLICKER_API,
@@ -67,3 +69,17 @@ export const getImageUrl = ({
 }) => {
   return `https://live.staticflickr.com/${server}/${id}_${secret}_${size}.jpg`;
 };
+
+export const getPaginatedNextUrl = (photoId: string): string => {
+  const searchParams = new URLSearchParams({
+    method: 'flickr.photos.getContext',
+    api_key: import.meta.env.VITE_FLICKER_API,
+    format: 'json',
+    nojsoncallback: '1',
+    photo_id: photoId ?? '',
+  });
+  const url = new URL(API_BASE_URL);
+  url.search = searchParams.toString();
+  return url.toString();
+};
+export const MIN_SEARCH_TERM_LENGTH = 3;
