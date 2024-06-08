@@ -40,7 +40,7 @@ export const defaultState: Pick<Store, NonFunctionKeys<Store>> = {
 
 export const useStore = create<Store>()(
   devtools(
-    subscribeWithSelector((set, get) => ({
+    subscribeWithSelector((set) => ({
       ...defaultState,
       setError: (error) => set({ error }),
       setIsLoading: (isLoading) => set({ isLoading }),
