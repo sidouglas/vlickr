@@ -1,2 +1,2 @@
 export { ImageSrcSet } from './ImageSrcSet';
-export type { ImageSrcSetProps } from './types';
+export type { ImageSrcSetProps, OnLoadOptions } from './types';

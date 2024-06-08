@@ -4,13 +4,13 @@ import { z } from 'zod';
 export const flickrImageSchema = z
   .object({
     farm: z.number(),
+    height_m: z.number(),
     id: z.string(),
     owner: z.string(),
     secret: z.string(),
     server: z.string(),
     title: z.string(),
     url_m: z.string().url(),
-    height_m: z.number(),
     width_m: z.number(),
   })
   .transform((data) => {
@@ -32,12 +32,12 @@ export const flickrDetailImageSchema = flickrImageSchema.innerType().omit({
 export type FlickrDetailImage = z.infer<typeof flickrDetailImageSchema>;
 
 export const flickrPhotoSizeSchema = z.object({
-  label: z.string(),
-  width: z.number(),
   height: z.number(),
-source: z.string().url(),
+  label: z.string(),
+  media: z.string(),
+  source: z.string().url(),
   url: z.string().url(),
-  media: z.literal('photo'),
+  width: z.number(),
 });
 
 export type FlickrImageSize = z.infer<typeof flickrPhotoSizeSchema>;
@@ -50,3 +50,21 @@ export const flickImageSizesSchema = z.object({
 });
 
 export type FlickrImageSizes = z.infer<typeof flickImageSizesSchema>;
+
+export const queryImageSizeResponseSchema = z.object({
+  code: z.number().optional(),
+  message: z.string().optional(),
+  sizes: flickImageSizesSchema,
+  stat: z.enum(['ok', 'fail']),
+});
+
+export type ImageSizeResponseSchema = z.infer<typeof queryImageSizeResponseSchema>;
+
+export const paginatedImageSchema = z.object({
+  id: z.union([z.string(), z.number()]),
+  thumb: z.string().nullish(),
+  title: z.string().nullish(),
+  url: z.string().nullish(),
+});
+
+export type PaginatedImage = z.infer<typeof paginatedImageSchema>;

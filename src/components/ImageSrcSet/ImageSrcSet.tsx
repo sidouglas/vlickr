@@ -1,8 +1,10 @@
 import { useQueryImageSizes } from '@/api/useQueryImageSizes';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { ImageSrcSetProps } from './types';
 import { FlickrImageSize } from '@/types/flickrImage';
 import { useStore } from '@/store';
+import { cn, getAspectRatio } from '@/utils';
+import { Image } from './Image';
 
 const generateSrcSet = (imageData: FlickrImageSize[], maxWidth: number) => {
   return imageData
@@ -17,47 +19,61 @@ const generateSrcSet = (imageData: FlickrImageSize[], maxWidth: number) => {
 
 const placeholderGif = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-export const ImageSrcSet = ({ id, maxWidth, className, onLoad, ...rest }: ImageSrcSetProps) => {
+const errorImage = {
+  className: 'p-[20%] opacity-50 dark:invert',
+  src: '/broken.svg',
+};
+
+const ASPECT_RATIO = '16 / 9';
+
+export const ImageSrcSet = ({
+  id,
+  maxWidth,
+  className,
+  onLoad,
+  ['data-testid']: testId,
+  ...rest
+}: ImageSrcSetProps) => {
   const setError = useStore((state) => state.setError);
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState<string>(ASPECT_RATIO);
   const { data, error } = useQueryImageSizes(id);
-
-  const photos = useStore((state) => state.photos);
-
   useEffect(() => {
     if (error) {
+      setAspectRatio(ASPECT_RATIO);
       setError('Sorry, something went wrong and we could not load the image.');
+      onLoad?.(false, { renderedSize: [0, 'auto'] });
     }
-  }, [error, setError]);
-
-  const aspectRatio = useMemo(() => {
-    if (!photos.length) {
-      return '';
-    }
-    const photo = photos.find((photo) => photo.id === id);
-    return photo?.aspectRatio ? photo.aspectRatio : '';
-  }, [id, photos]);
-
-  const getImageSrcSet = useMemo(() => {
+  }, [error, onLoad, setError]);
+  const sources = useMemo(() => {
     if (!data) return;
-    return generateSrcSet(data.sizes.size, maxWidth);
+    return {
+      srcSet: generateSrcSet(data.sizes.size, maxWidth),
+    };
   }, [data, maxWidth]);
 
   const handleOnLoad = useCallback(
-    (e: React.SyntheticEvent<HTMLImageElement>) => {
-      setHasLoaded(true);
-      setTimeout(() => onLoad?.(e), 500);
+    (e: SyntheticEvent<HTMLImageElement>) => {
+      const current = e.currentTarget;
+      const currentSrc = e.currentTarget.currentSrc;
+      if (!error && currentSrc && currentSrc !== placeholderGif) {
+        const maxWidth = current.clientWidth;
+        const [ratio, width, height] = getAspectRatio(current.naturalWidth, current.naturalHeight);
+        setAspectRatio(ratio);
+        const calcHeight = (height / width) * maxWidth;
+        onLoad?.(e, { renderedSize: [maxWidth, calcHeight] });
+      }
     },
-    [onLoad]
+    [error, onLoad]
   );
 
   return (
-    <img
-      src={placeholderGif}
-      className={`${className} w-full`}
-      srcSet={getImageSrcSet}
-      style={{ aspectRatio: hasLoaded || aspectRatio ? aspectRatio : '1' }}
+    <Image
+      className={cn('w-full', error ? errorImage.className : null, className)}
+      data-testid={testId ?? 'image'}
       onLoad={handleOnLoad}
+      src={error ? errorImage.src : placeholderGif}
+      srcSet={error ? undefined : sources?.srcSet}
+      style={{ aspectRatio }}
       {...rest}
     />
   );

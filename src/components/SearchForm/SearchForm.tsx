@@ -11,7 +11,7 @@ export const SearchForm = ({ handleOnChange, handleSubmit, isFetching }: SearchF
         type="submit"
         disabled={isFetching}
       >
-        {isFetching ? 'Loading' : 'Search'}
+        Search
       </button>
     </form>
   </div>

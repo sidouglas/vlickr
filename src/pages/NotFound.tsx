@@ -1,11 +1,11 @@
 import { Main } from '@/components/Main';
-import { NavBarSearch } from '@/components/NavBarSearch/NavBarSearch';
+import { NavBar } from '@/components/NavBar';
 import { Link } from 'react-router-dom';
 
 export const NotFound = () => {
   return (
     <>
-      <NavBarSearch />
+      <NavBar />
       <Main>
         <div className="grid h-screen place-content-center px-4">
           <div className="text-center">
@@ -17,7 +17,7 @@ export const NotFound = () => {
 
             <Link
               to="/"
-              className="mt-6 inline-block rounded px-5 py-3 text-sm font-medium hover:bg-blue-600 focus:outline-none focus:ring"
+              className="mt-6 inline-block rounded bg-primary px-5 py-3 text-sm font-medium focus:outline-none focus:ring"
             >
               Go Back Home
             </Link>

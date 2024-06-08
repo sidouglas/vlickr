@@ -1,9 +1,14 @@
 import { useStore } from '@/store';
 import { useCallback, useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export const Toast = () => {
-  const setError = useStore((state) => state.setError);
-  const errorMessage = useStore((state) => state.error);
+  const { error, setError } = useStore(
+    useShallow((state) => ({
+      setError: state.setError,
+      error: state.error,
+    }))
+  );
 
   useEffect(() => {
     return useStore.subscribe(
@@ -18,10 +23,10 @@ export const Toast = () => {
 
   const handleClose = useCallback(() => setError(null), [setError]);
 
-  return errorMessage ? (
+  return error ? (
     <div className="fixed inset-x-0 bottom-0 p-4">
       <div className="relative flex items-center justify-between gap-4 rounded-lg bg-red-600 px-4 py-3 text-white shadow-lg dark:bg-red-900">
-        <p className="text-sm font-medium">{errorMessage}</p>
+        <p className="text-sm font-medium">{error}</p>
 
         <button
           aria-label="Close"
