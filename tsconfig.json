@@ -5,6 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "types": ["vitest/globals", "vitest/importMeta"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -19,11 +20,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noErrorTruncation": true,
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "src/__mocks__"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
