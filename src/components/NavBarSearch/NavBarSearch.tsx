@@ -39,7 +39,6 @@ export const NavBarSearch = () => {
         setSearchTerm(searchValue);
         setPagination({ page: 1 });
         navigate('/');
-        console.log('all done', searchValue, setSearchTerm);
       }
     },
     [navigate, setPagination, setSearchTerm]
