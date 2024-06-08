@@ -3,8 +3,8 @@ import type { ZodTypeAny, z } from 'zod';
 export const createFetch = <Output extends ZodTypeAny>(
   zodSchema: Output
 ): ((input: RequestInfo | URL, init?: RequestInit) => Promise<z.infer<Output>>) => {
-  return (input, init) =>
-    fetch(input, init).then((res) => {
+  return function doFetch(input, init) {
+    return fetch(input, init).then((res) => {
       if (!res.ok) {
         throw new Error(res.statusText);
       }
@@ -17,4 +17,5 @@ export const createFetch = <Output extends ZodTypeAny>(
         }
       });
     });
+  };
 };
