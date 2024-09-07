@@ -2,7 +2,7 @@
 
 Small project that arose [from this reddit conversation](https://www.reddit.com/r/reactjs/comments/1cihzr4/failed_technical_interview_task_where_did_i_go/)
 
-* Deployment: https://sidouglas-flickr.vercel.app/
+* Deployment: [https://sidouglas-flickr.vercel.app/](https://sidouglas-vlickr.vercel.app/)
 * Todo - add pagination
 
 ## React + TypeScript+ Vite
